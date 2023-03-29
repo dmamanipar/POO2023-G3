@@ -9,5 +9,10 @@ public class ClaseGeneral {
         p1Obj.nombre="Raul";
         p1Obj.edad=21;
         p1Obj.saludo();
+
+        p1Obj=new Persona();
+        p1Obj.setNombre("Pedro");//Encapsulamiento
+        p1Obj.setEdad(22);//Encapsulamiento
+        p1Obj.saludo();
     }
 }
