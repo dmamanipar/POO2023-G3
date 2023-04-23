@@ -83,6 +83,8 @@ doskey /history
               <configuration>
                 <archive>
                   <manifest>
+                    <addClasspath>true</addClasspath>
+                    <classpathPrefix>lib/</classpathPrefix>  		  
                     <mainClass>pe.edu.upeu.app.App</mainClass>
                   </manifest>
                 </archive>
