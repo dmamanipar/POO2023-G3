@@ -23,7 +23,7 @@ public class MenuMenuItemDao implements MenuMenuItenDaoI {
         lista.add(new MenuMenuItenTO("Edit", "copy", "micopy"));
         lista.add(new MenuMenuItenTO("Edit", "paste", "mipaste"));
         lista.add(new MenuMenuItenTO("Edit",
-                idioma.getProperty("menuitem.nombre.postulante"), "miselectall"));
+                idioma.getProperty("menuitem.nombre.postulante"), "miselectall"));//mimiselectall
         lista.add(new MenuMenuItenTO("Help", "Ver1", "miver1"));
         lista.add(new MenuMenuItenTO("Help", "Ver2", "miver2"));
         List<MenuMenuItenTO> accesoReal = new ArrayList<>();

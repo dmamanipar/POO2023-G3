@@ -136,11 +136,28 @@ public class GUIMain extends JFrame {
         public void actionPerformed(ActionEvent e) {
             System.out.println("pasa por aqui");
             Container contai = GUIMain.this.getContentPane();
+            
+            if(((JMenuItem) e.getSource()).getName().equals("mimiver1")){
+                jtpane.removeAll();
+                MainPostulante mp=new MainPostulante();
+                mp.setPreferredSize(new Dimension(1000, 800));
+                scrollPane=new JScrollPane(mp);
+                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                jtpane.add("Postulante",scrollPane);     
+                
+                jtpane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+                contai.add(BorderLayout.CENTER, jtpane);
+                contai.invalidate();
+                contai.validate();
+                contai.repaint();                
+            }
+
             if (((JMenuItem) e.getSource()).getName().equals("mimiselectall")) {
                 jtpane.removeAll();//remueve todo el contenido
                 
                 /*MainPostulante jp = new MainPostulante();
-//jp.setPreferredSize(new Dimension(2000, 1000));
+                //jp.setPreferredSize(new Dimension(2000, 1000));
                 scrollPane = new JScrollPane(jp);
                 scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
                 );
@@ -148,6 +165,13 @@ public class GUIMain extends JFrame {
                 );
                 jtpane.add("main", scrollPane);
                 */
+                
+                MainPostulante mp=new MainPostulante();
+                mp.setPreferredSize(new Dimension(1000, 800));
+                scrollPane=new JScrollPane(mp);
+                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                jtpane.add("Postulante",scrollPane);
                 
                 
                 JPanel pp1 = new JPanel();

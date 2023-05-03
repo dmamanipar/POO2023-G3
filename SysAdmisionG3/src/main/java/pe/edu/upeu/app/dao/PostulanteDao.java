@@ -150,19 +150,16 @@ public class PostulanteDao implements PostulanteDaoI {
         d.setEstado("Activo");
         d.setIdCarrera(1);
         d.setIdPeriodo(1);
-
         //dao.create(d);
         //dao.update(d);
         try {
             dao.delete("01436319");
         } catch (Exception e) {
         }
-
         System.out.println("DNI\t Nombre\t A.Paterno");
         for (PostulanteTO po : dao.listarTodo()) {
             System.out.println(po.getDni() + "\t" + po.getNombre() + "\t" + po.getApellidoPat());
         }
-
         int i = 0;
         System.out.println("i=" + (++i));
         //id_carrera, id_periodo
@@ -171,17 +168,63 @@ public class PostulanteDao implements PostulanteDaoI {
 
     @Override
     public List<PostulanteTO> listCmb(String filter) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<PostulanteTO> ls = new ArrayList();
+        ls.add(new PostulanteTO());
+        ls.addAll(listarTodo());
+        return ls;
     }
 
     @Override
     public PostulanteTO buscarEntidad(String dni) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        PostulanteTO entidad = new PostulanteTO();
+        String sql = "SELECT po.*, p.nombre as nombreperiodo, c.nombrecarrera "
+                + "FROM postulante po, periodo p, carrera c "
+                + "WHERE po.dni =  ? and p.id_periodo = po.id_periodo and po.id_carrera = c.id_carrera";
+        try {
+            //connection = new Conn().connectSQLite();
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, dni);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                entidad.setDni(rs.getString("dni"));
+                entidad.setNombre(rs.getString("nombre"));
+                entidad.setApellidoPat(rs.getString("apellido_pat"));
+                entidad.setApellidoMat(rs.getString("apellido_mat"));
+                entidad.setModalidad(rs.getString("modalidad"));
+                entidad.setEstado(rs.getString("estado"));
+                entidad.setIdCarrera(rs.getInt("id_carrera"));
+                entidad.setIdPeriodo(rs.getInt("id_periodo"));
+                entidad.setNombrePeriodo(rs.getString("nombreperiodo"));
+                entidad.setNombreCarrera(rs.getString("nombrecarrera"));
+                entidad.setNombreModalidad(buscarModalidadExamen(rs.getString(
+                        "modalidad")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+        return entidad;
     }
 
     @Override
     public List<ModeloDataAutocomplet> listAutoComplet(String filter) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<ModeloDataAutocomplet> listarentidad = new ArrayList();
+        String sql = "SELECT * FROM postulante WHERE nombre like ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, filter + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ModeloDataAutocomplet data = new ModeloDataAutocomplet();
+                //ModeloDataAutocomplet.TIPE_DISPLAY = "ID";
+                data.setIdx(rs.getString("dni"));
+                data.setNombreDysplay(rs.getString("nombre"));
+                data.setOtherData(rs.getString("modalidad"));
+                listarentidad.add(data);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+        return listarentidad;
     }
 
     @Override
@@ -196,12 +239,41 @@ public class PostulanteDao implements PostulanteDaoI {
 
     @Override
     public List<ComboBoxOption> listarPeriodo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<ComboBoxOption> dd = new ArrayList<>();
+        String sql = "SELECT * FROM periodo";
+        try {
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                dd.add(new ComboBoxOption(String.valueOf(rs.getInt("id_periodo")),
+                        rs.getString("nombre")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+        return dd;
     }
 
     @Override
     public List<ModeloDataAutocomplet> listAutoCompletCarrera(String filter) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<ModeloDataAutocomplet> listarentidad = new ArrayList();
+        String sql = "SELECT * FROM carrera WHERE nombrecarrera like ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, filter + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ModeloDataAutocomplet data = new ModeloDataAutocomplet();
+                //ModeloDataAutocomplet.TIPE_DISPLAY = "ID";
+                data.setIdx(rs.getString("id_carrera"));
+                data.setNombreDysplay(rs.getString("nombrecarrera"));
+                data.setOtherData(rs.getString("id_area_examen"));
+                listarentidad.add(data);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+        return listarentidad;
     }
 
     @Override
