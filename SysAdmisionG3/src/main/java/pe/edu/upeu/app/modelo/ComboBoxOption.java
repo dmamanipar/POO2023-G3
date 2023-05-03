@@ -11,10 +11,19 @@ import lombok.Data;
  * @author Data_Science
  */
 @Data
-public class PostulanteTO {
-    public int idPostulante, idCarrera, idPeriodo;
-    public String dni, nombre, apellidoPat, apellidoMat, modalidad, estado;
-    //no data base
-    public String nombreModalidad, nombrePeriodo, nombreCarrera;
+public class ComboBoxOption {
+
+    private String key;
+    private String value;
+
+    public ComboBoxOption(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 
 }
