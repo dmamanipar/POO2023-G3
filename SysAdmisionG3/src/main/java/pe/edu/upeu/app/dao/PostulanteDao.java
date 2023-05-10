@@ -156,7 +156,7 @@ public class PostulanteDao implements PostulanteDaoI {
                     d.setNombre(sc.next());
                     System.out.println("Ingrese A. Paterno:");
                     d.setApellidoPat(sc.next());
-                    System.out.println("Ingrese A. Materno:");                   
+                    System.out.println("Ingrese A. Materno:");
                     d.setApellidoMat(sc.next());
                     System.out.println("Ingrese Modalidad:");
                     d.setModalidad(sc.next());
@@ -175,6 +175,12 @@ public class PostulanteDao implements PostulanteDaoI {
                 case "U" -> {
                 }
                 case "D" -> {
+                    System.out.println("Ingrese el DNI que desea Eliminar:");
+                    try {
+                        dao.delete(sc.next());
+                    } catch (Exception e) {
+                    }
+                    dao.listarPostulantes(dao.listarTodo());
                 }
                 default -> {
                     System.out.println("Opción no valida intente otra vez!");
@@ -183,16 +189,6 @@ public class PostulanteDao implements PostulanteDaoI {
             System.out.println("Que desea hacer?\n" + msg);
             opc = sc.next();
         } while (!opc.toUpperCase().equals("X"));
-
-        //
-        //dao.update(d);
-        try {
-            dao.delete("01436319");
-        } catch (Exception e) {
-        }
-        int i = 0;
-        System.out.println("i=" + (++i));
-        //id_carrera, id_periodo
 
     }
 
