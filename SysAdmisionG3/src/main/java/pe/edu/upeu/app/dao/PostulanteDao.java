@@ -162,9 +162,9 @@ public class PostulanteDao implements PostulanteDaoI {
                     d.setModalidad(sc.next());
                     System.out.println("Ingrese Estado:");
                     d.setEstado(sc.next());
-                    System.out.println("Ingrese Carrera:");
+                    System.out.println("Ingrese Carrera (1=Sistemas, 2=Contabilidad):");
                     d.setIdCarrera(sc.nextInt());
-                    System.out.println("Ingrese Periodo:");
+                    System.out.println("Ingrese Periodo (1=2023-1):");
                     d.setIdPeriodo(sc.nextInt());
                     dao.create(d);
                     dao.listarPostulantes(dao.listarTodo());
