@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import pe.com.syscenterlife.autocomp.ModeloDataAutocomplet;
 import pe.edu.upeu.app.conexion.ConnS;
@@ -140,7 +141,24 @@ public class PostulanteDao implements PostulanteDaoI {
 
     public static void main(String[] args) {
         PostulanteDao dao = new PostulanteDao();
-
+        Scanner sc=new Scanner(System.in);
+        String opc="R";
+        System.out.println("****************Bienvenido al Sistemas****************");
+        String msg="Opciones de Menú:\nC=Crear\nR=Reportar\nU=Actualizar\nD=Eliminar";
+        do{
+            switch (opc) {
+                case "C"->{ }
+                case "R"->{ }
+                case "U"->{ }
+                case "D"->{ }
+                default->{
+                    System.out.println("Opción no valida intente otra vez!");
+                }                
+            }
+            System.out.println("Que desea hacer?\n"+msg);
+            opc=sc.next();
+        }while(!opc.toUpperCase().equals("X"));
+        
         PostulanteTO d = new PostulanteTO();
         d.setDni("01436319");
         d.setNombre("David Dario");
