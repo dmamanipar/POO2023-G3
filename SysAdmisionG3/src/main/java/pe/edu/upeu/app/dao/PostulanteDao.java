@@ -141,47 +141,66 @@ public class PostulanteDao implements PostulanteDaoI {
 
     public static void main(String[] args) {
         PostulanteDao dao = new PostulanteDao();
-        Scanner sc=new Scanner(System.in);
-        String opc="R";
+        Scanner sc = new Scanner(System.in);
+        String opc = "R";
         System.out.println("****************Bienvenido al Sistemas****************");
-        String msg="Opciones de Menú:\nC=Crear\nR=Reportar\nU=Actualizar\nD=Eliminar";
-        do{
+        String msg = "Opciones de Menú:\nC=Crear\nR=Reportar\nU=Actualizar\nD=Eliminar";
+        PostulanteTO d;
+        do {
             switch (opc) {
-                case "C"->{ }
-                case "R"->{ }
-                case "U"->{ }
-                case "D"->{ }
-                default->{
+                case "C" -> {
+                    d = new PostulanteTO();
+                    System.out.println("Ingrese DNI:");
+                    d.setDni(sc.next());
+                    System.out.println("Ingrese Nombre:");
+                    d.setNombre(sc.next());
+                    System.out.println("Ingrese A. Paterno:");
+                    d.setApellidoPat(sc.next());
+                    System.out.println("Ingrese A. Materno:");                   
+                    d.setApellidoMat(sc.next());
+                    System.out.println("Ingrese Modalidad:");
+                    d.setModalidad(sc.next());
+                    System.out.println("Ingrese Estado:");
+                    d.setEstado(sc.next());
+                    System.out.println("Ingrese Carrera:");
+                    d.setIdCarrera(sc.nextInt());
+                    System.out.println("Ingrese Periodo:");
+                    d.setIdPeriodo(sc.nextInt());
+                    dao.create(d);
+                    dao.listarPostulantes(dao.listarTodo());
+                }
+                case "R" -> {
+                    dao.listarPostulantes(dao.listarTodo());
+                }
+                case "U" -> {
+                }
+                case "D" -> {
+                }
+                default -> {
                     System.out.println("Opción no valida intente otra vez!");
-                }                
+                }
             }
-            System.out.println("Que desea hacer?\n"+msg);
-            opc=sc.next();
-        }while(!opc.toUpperCase().equals("X"));
-        
-        PostulanteTO d = new PostulanteTO();
-        d.setDni("01436319");
-        d.setNombre("David Dario");
-        d.setApellidoPat("Mamani");
-        d.setApellidoMat("Mendoza");
-        d.setModalidad("Examen");
-        d.setEstado("Activo");
-        d.setIdCarrera(1);
-        d.setIdPeriodo(1);
-        //dao.create(d);
+            System.out.println("Que desea hacer?\n" + msg);
+            opc = sc.next();
+        } while (!opc.toUpperCase().equals("X"));
+
+        //
         //dao.update(d);
         try {
             dao.delete("01436319");
         } catch (Exception e) {
         }
-        System.out.println("DNI\t Nombre\t A.Paterno");
-        for (PostulanteTO po : dao.listarTodo()) {
-            System.out.println(po.getDni() + "\t" + po.getNombre() + "\t" + po.getApellidoPat());
-        }
         int i = 0;
         System.out.println("i=" + (++i));
         //id_carrera, id_periodo
 
+    }
+
+    public void listarPostulantes(List<PostulanteTO> lista) {
+        System.out.println("DNI\t\t Nombre\t\t A.Paterno");
+        for (PostulanteTO po : lista) {
+            System.out.println(po.getDni() + "\t\t" + po.getNombre() + "\t\t" + po.getApellidoPat());
+        }
     }
 
     @Override
