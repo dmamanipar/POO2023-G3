@@ -173,6 +173,15 @@ public class PostulanteDao implements PostulanteDaoI {
                     dao.listarPostulantes(dao.listarTodo());
                 }
                 case "U" -> {
+                    System.out.println("Ingrese el DNI del registro que desea modificar:");
+                    String dni = sc.next();
+                    d = dao.buscarEntidad(dni);
+                    System.out.println("Ingrese el nuevo Nombre:");
+                    d.setNombre(sc.next());
+                    System.out.println("Ingrese el nuevo A. Paterno:");
+                    d.setApellidoPat(sc.next());
+                    dao.update(d);
+                    dao.listarPostulantes(dao.listarTodo());
                 }
                 case "D" -> {
                     System.out.println("Ingrese el DNI que desea Eliminar:");
@@ -189,7 +198,6 @@ public class PostulanteDao implements PostulanteDaoI {
             System.out.println("Que desea hacer?\n" + msg);
             opc = sc.next();
         } while (!opc.toUpperCase().equals("X"));
-
     }
 
     public void listarPostulantes(List<PostulanteTO> lista) {
