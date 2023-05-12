@@ -16,6 +16,7 @@ import pe.com.syscenterlife.autocomp.ModeloDataAutocomplet;
 import pe.edu.upeu.app.conexion.ConnS;
 import pe.edu.upeu.app.modelo.ComboBoxOption;
 import pe.edu.upeu.app.modelo.PostulanteTO;
+import pe.edu.upeu.app.modelo.UsuarioTO;
 import pe.edu.upeu.app.util.ErrorLogger;
 
 /**
@@ -327,6 +328,18 @@ public class PostulanteDao implements PostulanteDaoI {
             }
         }
         return nombre;
+    }
+
+    void create(UsuarioTO d) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    void listarUsuarios(List<PostulanteTO> listarTodo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    void update(UsuarioTO d) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }
