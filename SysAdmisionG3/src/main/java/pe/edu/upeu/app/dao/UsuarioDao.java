@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
+//import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -28,27 +28,24 @@ public class UsuarioDao implements UsuarioDaoI {
     PreparedStatement ps;
     ResultSet rs;
 
-    ErrorLogger log = new ErrorLogger(PostulanteDao.class.getName());
-    private Iterable<UsuarioDao> usuario;
+    ErrorLogger log = new ErrorLogger(UsuarioDao.class.getName());
 
     @Override
     public int crearUsuario(UsuarioTO d) {
         int rsId = 0;
-        String[] returns = {"clave"};
-        String sql = "INSERT INTO postulante(id_carrera, "
-                + "clave,nombre, apellido, Perfil, Estado) "
-                + " values(?, ?, ?, ?, ?,?,);";
+        String[] returns = {"user"};
+        String sql = "INSERT INTO usuario( "
+                + "user, clave, perfil, estado )"
+                + " values(?, ?, ?, ? );";
         int i = 0;
         try {
             ps = connection.prepareStatement(sql, returns);
-            ps.setInt(++i, d.getIdUsuario());
-            ps.setString(++i, d.getclave());
-            ps.setString(++i, d.getNombre());
-            ps.setString(++i, d.getApellido());
+            ps.setString(++i, d.getUser());
+            ps.setString(++i, d.getClave());
             ps.setString(++i, d.getPerfil());
             ps.setString(++i, d.getEstado());
             rsId = ps.executeUpdate();
-            try ( ResultSet rs = ps.getGeneratedKeys()) {
+            try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
                     rsId = rs.getInt(1);
                 }
@@ -57,44 +54,45 @@ public class UsuarioDao implements UsuarioDaoI {
         } catch (SQLException ex) {
             log.log(Level.SEVERE, "create", ex);
         }
-        return 0;
+        return rsId;
 
     }
 
     @Override
     public int actualizarUsuario(UsuarioTO d) {
-        System.out.println("actualizar d.getDniruc: " + d.getClave());
+        System.out.println("actualizar d.getDniruc: " + d.getIdUsuario());
         int comit = 0;
-        String sql = "UPDATE postulante SET "
-                + "nombre=?, "
-                + "apellido=?, "
+        String sql = "UPDATE usuario SET "
+                + "user=?, "
+                + "clave=?, "
                 + "perfil=?, "
-                + "estado=?, "
-                + "WHERE clave=?";
+                + "estado=? "
+                + "WHERE id_usuario=?";
         int i = 0;
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(++i, d.getNombre());
-            ps.setString(++i, d.getApellido());
+            ps.setString(++i, d.getUser());
+            ps.setString(++i, d.getClave());
             ps.setString(++i, d.getPerfil());
             ps.setString(++i, d.getEstado());
-            ps.setString(++i, d.getClave());
+            ps.setInt(++i, d.getIdUsuario());
+
             comit = ps.executeUpdate();
         } catch (SQLException ex) {
             log.log(Level.SEVERE, "update", ex);
         }
 
-        return 0;
+        return comit;
 
     }
 
     @Override
-    public int eliminarUsuario(String clave) throws Exception {
+    public int eliminarUsuario(String usuario) throws Exception {
         int comit = 0;
-        String sql = "DELETE FROM postulante WHERE clave = ?";
+        String sql = "DELETE FROM usuario WHERE user = ?";
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(1, clave);
+            ps.setString(1, usuario);
             comit = ps.executeUpdate();
         } catch (SQLException ex) {
             log.log(Level.SEVERE, "delete", ex);
@@ -105,41 +103,39 @@ public class UsuarioDao implements UsuarioDaoI {
         return 0;
 
     }
-  
-    @Override
-    public List<UsuarioTO> listarUsuarios(String filter) {
-        List<UsuarioTO> ls = new ArrayList();
-        ls.add(new UsuarioTO());
-        ls.addAll(listarTodo());
-         return null;
-         }
 
-    private Collection<? extends UsuarioTO> listarTodo() {
+    public void listarUsuarios(List<UsuarioTO> lista) {
+        System.out.println("User\t\t Clave\t\t Perfil\t\t Estado");
+        for (UsuarioTO po : lista) {
+            System.out.println(po.getUser() + "\t\t" + po.getClave() + "\t\t" + po.getPerfil() + "\t\t" + po.getEstado());
+        }
+    }
+
+    @Override
+    public List<UsuarioTO> listarTodo() {
         List<UsuarioTO> listarEntidad = new ArrayList();
-        String sql = "SELECT po.*, p.nombre as nombreperiodo, c.nombrecarrera "
-                + "FROM postulante po, periodo p, carrera c "
-                + "WHERE p.id_periodo = po.id_periodo and po.id_carrera = c.id_carrera";
+        String sql = "SELECT * "
+                + "FROM usuario ";
         try {
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
                 UsuarioTO cli = new UsuarioTO();
+                cli.setIdUsuario(rs.getInt("id_usuario"));
+                cli.setUser(rs.getString("user"));
                 cli.setClave(rs.getString("clave"));
-                cli.setNombre(rs.getString("nombre"));
-                cli.setApellido(rs.getString("apellido"));
-                cli.setPerfil(rs.getString("modalidad"));
                 cli.setEstado(rs.getString("estado"));
+                cli.setPerfil(rs.getString("perfil"));
                 listarEntidad.add(cli);
             }
         } catch (SQLException e) {
             System.out.println(e.toString());
         }
-         return listarEntidad ;
-         }
+        return listarEntidad;
+    }
 
- 
-public static void main(String[] args) {
-        PostulanteDao dao = new PostulanteDao();
+    public static void main(String[] args) {
+        UsuarioDao dao = new UsuarioDao();
         Scanner sc = new Scanner(System.in);
         String opc = "R";
         System.out.println("****************Bienvenido al Sistemas****************");
@@ -149,40 +145,43 @@ public static void main(String[] args) {
             switch (opc) {
                 case "C" -> {
                     d = new UsuarioTO();
-                    System.out.println("Ingrese DNI:");
+                    System.out.println("Ingrese user :");
+                    d.setUser(sc.next());
+                    System.out.println("Ingrese clave :");
                     d.setClave(sc.next());
-                    System.out.println("Ingrese Nombre:");
-                    d.setNombre(sc.next());
-                    System.out.println("Ingrese A. Paterno:");
-                    d.setApellido(sc.next());
-                    System.out.println("Ingrese perfil:");
+                    System.out.println("Ingrese perfil :");
                     d.setPerfil(sc.next());
-                    System.out.println("Ingrese Estado:");
+                    System.out.println("Ingrese Estado :");
                     d.setEstado(sc.next());
-                    dao.create(d);
-                    dao.listarPostulantes(dao.listarTodo());
+                    dao.crearUsuario(d);
+                    dao.listarUsuarios(dao.listarTodo());
                 }
                 case "R" -> {
                     dao.listarUsuarios(dao.listarTodo());
                 }
                 case "U" -> {
-                    System.out.println("Ingrese la clave  del registro que desea modificar:");
-                    String clave = sc.next();
-                    System.out.println("Ingrese el nuevo Nombre:");
-                    d.setNombre(sc.next());
-                    System.out.println("Ingrese el nuevo A. Paterno:");
-                    d.setApellido(sc.next());
-                    dao.update(d);
-                    dao.listarPostulantes(dao.listarTodo());
+                    System.out.println("Ingrese el user  del registro que desea modificar:");
+                    int IdUsuario = sc.nextInt();
+                    d = dao.buscarEntidad(IdUsuario);
+                    System.out.println("Ingrese el nuevo user:");
+                    d.setUser(sc.next());
+                    System.out.println("Ingrese la nueva clave :");
+                    d.setClave(sc.next());
+                    System.out.println("Ingrese el nuevo perfil :");
+                    d.setPerfil(sc.next());
+                    System.out.println("Ingrese el nuevo estado :");
+                    d.setEstado(sc.next());
+                    dao.actualizarUsuario(d);
+                    dao.listarUsuarios(dao.listarTodo());
                 }
 
                 case "D" -> {
                     System.out.println("Ingrese el usario que desea Eliminar:");
                     try {
-                        dao.delete(sc.next());
+                        dao.eliminarUsuario(sc.next());
                     } catch (Exception e) {
                     }
-                    dao.listarPostulantes(dao.listarTodo());
+                    dao.listarUsuarios(dao.listarTodo());
                 }
                 default -> {
                     System.out.println("Opción no valida intente otra vez!");
@@ -194,28 +193,27 @@ public static void main(String[] args) {
     }
 
     @Override
-    public UsuarioTO buscarEntidad(String dni) {
+    public UsuarioTO buscarEntidad(int idUsuario) {
         UsuarioTO entidad = new UsuarioTO();
-        String sql = "SELECT po.*, p.nombre as nombreperfil, c.nombreestado "
-                + "FROM usuario us, perfil p, estado e "
-                + "WHERE us.clave =  ? and u.id_usuario = us.id_usuario ";
+        String sql = "SELECT * "
+                + "FROM usuario "
+                + "WHERE id_usuario=?";
         try {
             //connection = new Conn().connectSQLite();
             ps = connection.prepareStatement(sql);
-            ps.setString(1, dni);
+            ps.setInt(1, idUsuario);
             rs = ps.executeQuery();
             if (rs.next()) {
+                entidad.setUser(rs.getString("user"));
                 entidad.setClave(rs.getString("clave"));
-                entidad.setNombre(rs.getString("nombre"));
-                entidad.setApellido(rs.getString("apellido_pat"));
-                entidad.setPerfil(rs.getString("modalidad"));
+                entidad.setPerfil(rs.getString("perfil"));
                 entidad.setEstado(rs.getString("estado"));
+                entidad.setIdUsuario(rs.getInt("id_usuario"));
             }
         } catch (SQLException e) {
             System.out.println(e.toString());
         }
-         return entidad;
-         }
+        return entidad;
     }
 
-
+}

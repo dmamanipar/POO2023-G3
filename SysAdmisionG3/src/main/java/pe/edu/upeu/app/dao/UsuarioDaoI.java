@@ -20,9 +20,10 @@ public interface UsuarioDaoI {
 
     public int actualizarUsuario(UsuarioTO d);
 
-    public int eliminarUsuario(String id) throws Exception;
+    public int eliminarUsuario(String idUsuario) throws Exception;
+    
+    public List<UsuarioTO> listarTodo();
 
-    public List<UsuarioTO> listarUsuarios(String filter);
-    public UsuarioTO buscarEntidad(String dni);
+    public UsuarioTO buscarEntidad(int idUsuario );
 
 }
