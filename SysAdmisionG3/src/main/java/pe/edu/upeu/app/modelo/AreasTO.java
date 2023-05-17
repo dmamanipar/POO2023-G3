@@ -6,12 +6,16 @@ package pe.edu.upeu.app.modelo;
 
 import lombok.Data;
 
+
 /**
  *
  * @author Data_Science
  */
+
 @Data
-public class AreaExamenTO {
-    public int idAreaExamen;
-    public String nombreae;
+public class AreasTO {
+
+    public int idArea;
+    public String nombrearea, siglas;
+
 }
