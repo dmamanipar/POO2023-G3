@@ -8,11 +8,14 @@ import lombok.Data;
 
 /**
  *
- * @author Data_Science
+ * @author usuario
  */
 @Data
-public class PeriodoTO {
-    public int idPeriodo;
-    public String nombre, estado;
-    
+public class ResultadoFinalTO {
+
+    public int idResultFinal, idPostulante, idPeriodo, idCarrera;
+    public String dni;
+    public double puntoDeConocimiento, puntoDeEntrevista;
+    public int EvalPsicologica;
+
 }
