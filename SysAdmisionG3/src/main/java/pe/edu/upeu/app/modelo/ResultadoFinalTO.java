@@ -15,7 +15,8 @@ public class ResultadoFinalTO {
 
     public int idResultFinal, idPostulante, idPeriodo, idCarrera;
     public String dni;
-    public double puntoDeConocimiento, puntoDeEntrevista;
-    public int EvalPsicologica;
-
+    public double puntoConocimiento, puntoEntrevista;
+    public int evalPsicologica;
+    //no data base
+    public String  nombreCarrera,nombrePeriodo,nombrePostulante ;
 }
