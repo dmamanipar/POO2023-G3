@@ -10,7 +10,7 @@ package pe.edu.upeu.app.modelo;
  */
 public class FacultadTO {
     public int idFacultad;
-    public String nombrefacultad;
+    public String nombreFacultad;
 
     public int getIdFacultad() {
         return idFacultad;
@@ -20,17 +20,17 @@ public class FacultadTO {
         this.idFacultad = idFacultad;
     }
 
-    public String getNombrefacultad() {
-        return nombrefacultad;
+    public String getNombreFacultad() {
+        return nombreFacultad;
     }
 
-    public void setNombrefacultad(String nombrefacultad) {
-        this.nombrefacultad = nombrefacultad;
+    public void setNombreFacultad(String nombrefacultad) {
+        this.nombreFacultad = nombrefacultad;
     }
 
     @Override
     public String toString() {
-        return nombrefacultad;
+        return nombreFacultad;
     }
     
     
