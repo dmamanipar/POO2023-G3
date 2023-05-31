@@ -176,7 +176,7 @@ public class MainPostulante extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         txtCarrera = new javax.swing.JTextField();
         txtIdCarrera = new javax.swing.JTextField();
-        toastMsg = new pe.edu.upeu.app.componentes.ToastMsg();
+        toastMsg1 = new pe.edu.upeu.app.componentes.ToastMsg();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -250,7 +250,7 @@ public class MainPostulante extends javax.swing.JPanel {
                 .addComponent(btnNuevo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRegistrar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnEliminar)
                 .addContainerGap())
         );
@@ -290,8 +290,7 @@ public class MainPostulante extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(toastMsg, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
@@ -316,8 +315,9 @@ public class MainPostulante extends javax.swing.JPanel {
                                             .addComponent(cbxEstado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                             .addComponent(cbxModalidad, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtIdCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 22, Short.MAX_VALUE)))
+                                        .addComponent(txtIdCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(toastMsg1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -360,7 +360,7 @@ public class MainPostulante extends javax.swing.JPanel {
                         .addComponent(txtCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtIdCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(toastMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toastMsg1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -490,7 +490,7 @@ public class MainPostulante extends javax.swing.JPanel {
                 if (resultado != 0) {
                     listarDatos();
                     resetForm();
-                    toastMsg.success("Se actualizo correctamente!");
+                    //toastMsg.success("Se actualizo correctamente!");
                     //JOptionPane.showMessageDialog(this, "Re registro");
                 }
             } catch (Exception e) {
@@ -505,7 +505,7 @@ public class MainPostulante extends javax.swing.JPanel {
                         if (cDao.create(to) != 0) {
                             listarDatos();
                             resetForm();
-                            toastMsg.success("Se registro correctamente!");
+                            //toastMsg.success("Se registro correctamente!");
                             //JOptionPane.showMessageDialog(this, "Reregistro");
                         }
                     }
@@ -530,7 +530,7 @@ public class MainPostulante extends javax.swing.JPanel {
                     modelo.removeRow(rowx);
                     cDao.delete(valor.toString());
                     resetForm();
-                    toastMsg.success("Se elimino correctamente!");
+                    //toastMsg.success("Se elimino correctamente!");
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
@@ -591,7 +591,7 @@ public class MainPostulante extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private pe.edu.upeu.app.componentes.ToastMsg toastMsg;
+    private pe.edu.upeu.app.componentes.ToastMsg toastMsg1;
     private javax.swing.JTextField txtAMaterno;
     private javax.swing.JTextField txtAPaterno;
     private javax.swing.JTextField txtCarrera;
