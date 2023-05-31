@@ -496,7 +496,7 @@ public class MainPostulante extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
+           // TODO add your handling code here:
         List<ValidatorItem> vals = new ArrayList<>();
         vals.add(new ValidatorItem("required|number|min:8|max:8", txtDni,
             "DNI"));
