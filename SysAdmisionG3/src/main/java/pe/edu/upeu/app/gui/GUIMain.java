@@ -136,7 +136,21 @@ public class GUIMain extends JFrame {
         public void actionPerformed(ActionEvent e) {
             System.out.println("pasa por aqui");
             Container contai = GUIMain.this.getContentPane();
-            
+            if(((JMenuItem)e.getSource()).getName().equals("mimiusuario")){
+                System.out.println("si llega");
+                jtpane.removeAll();
+                MainUsuario map=new MainUsuario();
+                map.setPreferredSize(new Dimension(1000,600));
+                scrollPane=new JScrollPane(map);
+                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                jtpane.add("Usuario",scrollPane);
+                contai.add(BorderLayout.CENTER,jtpane);
+                contai.validate();
+                contai.repaint();
+                
+                
+    }
             if(((JMenuItem) e.getSource()).getName().equals("mimiver1")){
                 jtpane.removeAll();
                 MainPostulante mp=new MainPostulante();
