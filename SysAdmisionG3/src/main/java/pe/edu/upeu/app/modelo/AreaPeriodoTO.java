@@ -12,13 +12,7 @@ import lombok.Data;
  */
 @Data
 public class AreaPeriodoTO {
-    public int IdAreaPeriodo, IdArea, IdPeriodo;
-    public String NombreArea, Nombre;
-
-
-
-
-   
-
+    public int idAreaPeriodo, idArea, idPeriodo;
+    public String nombreArea, nombre;
 
 }
