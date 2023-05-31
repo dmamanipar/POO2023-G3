@@ -172,7 +172,7 @@
                                           </Group>
                                       </Group>
                                   </Group>
-                                  <Component id="toastMsg1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="toastMsg" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -230,7 +230,7 @@
                           </Group>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="toastMsg1" min="-2" max="-2" attributes="0"/>
+                      <Component id="toastMsg" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -352,7 +352,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtIdCarrera">
             </Component>
-            <Component class="pe.edu.upeu.app.componentes.ToastMsg" name="toastMsg1">
+            <Component class="pe.edu.upeu.app.componentes.ToastMsg" name="toastMsg">
             </Component>
           </SubComponents>
         </Container>

@@ -176,7 +176,7 @@ public class MainPostulante extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         txtCarrera = new javax.swing.JTextField();
         txtIdCarrera = new javax.swing.JTextField();
-        toastMsg1 = new pe.edu.upeu.app.componentes.ToastMsg();
+        toastMsg = new pe.edu.upeu.app.componentes.ToastMsg();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -316,7 +316,7 @@ public class MainPostulante extends javax.swing.JPanel {
                                             .addComponent(cbxModalidad, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(txtIdCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(toastMsg1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(toastMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -360,7 +360,7 @@ public class MainPostulante extends javax.swing.JPanel {
                         .addComponent(txtCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtIdCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(toastMsg1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toastMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -452,45 +452,54 @@ public class MainPostulante extends javax.swing.JPanel {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
+      // TODO add your handling code here:
         List<ValidatorItem> vals = new ArrayList<>();
         vals.add(new ValidatorItem("required|number|min:8|max:8", txtDni,
-                "DNI"));
-        vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
-        vals.add(new ValidatorItem("required", txtAPaterno, "A. Paterno"));
-        vals.add(new ValidatorItem("required", txtAMaterno, "A. Materno"));
-        //vals.add(new ValidatorItem("required", cbxModalidad, "Modalidad"));
-        //vals.add(new ValidatorItem("required", cbxEstado, "Estado"));
-        //vals.add(new ValidatorItem("required", cbxPeriodo, "Periodo"));
-        vals.add(new ValidatorItem("required", txtCarrera, "Nombre Carrera"));
-        vals.add(new ValidatorItem("required", txtIdCarrera, "Id Carrera"));
-        //vals.add(new ValidatorItem("required|date", txtDato1, "Fecha"));
-        //vals.add(new ValidatorItem("required|email", txtDato2, "Correo"));
-        //vals.add(new ValidatorItem("required|date", jDateChooser1,"Fecha"));
-        //vals.add(new ValidatorItem("required", jHintTextField2, "TextoHint"));
-
-        cDao = new PostulanteDao();
-        PostulanteTO to = new PostulanteTO();
-        to.setDni(txtDni.getText());
-        to.setNombre(txtNombre.getText());
-        to.setApellidoPat(txtAPaterno.getText());
-        to.setApellidoMat(txtAMaterno.getText());
+            "DNI"));
+    vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
+    vals.add(new ValidatorItem("required", txtAPaterno, "A. Paterno"));
+    vals.add(new ValidatorItem("required", txtAMaterno, "A. Materno"));
+    //vals.add(new ValidatorItem("required", cbxModalidad, "Modalidad"));
+    //vals.add(new ValidatorItem("required", cbxEstado, "Estado"));
+    //vals.add(new ValidatorItem("required", cbxPeriodo, "Periodo"));
+    vals.add(new ValidatorItem("required", txtCarrera, "Nombre Carrera"));
+    vals.add(new ValidatorItem("required", txtIdCarrera, "Id Carrera"));
+    //vals.add(new ValidatorItem("required|date", txtDato1, "Fecha"));
+    //vals.add(new ValidatorItem("required|email", txtDato2, "Correo"));
+    //vals.add(new ValidatorItem("required|date", jDateChooser1,"Fecha"));
+    //vals.add(new ValidatorItem("required", jHintTextField2, "TextoHint"));
+    int fila = jTable1.getSelectedRow();
+    PostulanteTO to;
+    cDao = new PostulanteDao();
+    to = new PostulanteTO();
+    if(fila!=-1){
+    to=cDao.buscarEntidad(txtDni.getText());
+    }
+    try {
         to.setModalidad(cbxModalidad.getSelectedItem() == null ? "0"
-                : ((ComboBoxOption) cbxModalidad.getSelectedItem()).getKey());
-        to.setEstado(cbxEstado.getSelectedItem() == null ? ""
-                : cbxEstado.getSelectedItem().toString());
+            : ((ComboBoxOption) cbxModalidad.getSelectedItem()).getKey());
         to.setIdPeriodo(Integer.parseInt(cbxPeriodo.getSelectedItem() == null
                 ? "0" : ((ComboBoxOption) cbxPeriodo.getSelectedItem()).getKey()));
-        to.setIdCarrera(Integer.parseInt(txtIdCarrera.getText().equals("")
-                ? "0" : txtIdCarrera.getText()));
-        int fila = jTable1.getSelectedRow();
+        } catch (Exception e) {
+        }   
+    
+    to.setDni(txtDni.getText());
+    to.setNombre(txtNombre.getText());
+    to.setApellidoPat(txtAPaterno.getText());
+    to.setApellidoMat(txtAMaterno.getText());
+        System.out.println("ERRCB:"+cbxModalidad.getSelectedItem());       
+    to.setEstado(cbxEstado.getSelectedItem() == null ? ""
+            : cbxEstado.getSelectedItem().toString());     
+    to.setIdCarrera(Integer.parseInt(txtIdCarrera.getText().equals("")
+        ? "0" : txtIdCarrera.getText()));
+        
         if (fila != -1) {
             try {
                 int resultado = cDao.update(to);
                 if (resultado != 0) {
                     listarDatos();
                     resetForm();
-                    //toastMsg.success("Se actualizo correctamente!");
+                    toastMsg.success("Se actualizo correctamente!");
                     //JOptionPane.showMessageDialog(this, "Re registro");
                 }
             } catch (Exception e) {
@@ -505,7 +514,7 @@ public class MainPostulante extends javax.swing.JPanel {
                         if (cDao.create(to) != 0) {
                             listarDatos();
                             resetForm();
-                            //toastMsg.success("Se registro correctamente!");
+                            toastMsg.success("Se registro correctamente!");
                             //JOptionPane.showMessageDialog(this, "Reregistro");
                         }
                     }
@@ -591,7 +600,7 @@ public class MainPostulante extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private pe.edu.upeu.app.componentes.ToastMsg toastMsg1;
+    private pe.edu.upeu.app.componentes.ToastMsg toastMsg;
     private javax.swing.JTextField txtAMaterno;
     private javax.swing.JTextField txtAPaterno;
     private javax.swing.JTextField txtCarrera;
