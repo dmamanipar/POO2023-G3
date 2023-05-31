@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import pe.edu.upeu.app.util.UtilsX;
 
 /**

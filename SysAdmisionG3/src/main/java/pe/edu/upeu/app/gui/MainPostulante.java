@@ -114,9 +114,12 @@ public class MainPostulante extends javax.swing.JPanel {
             PostulanteTO d = cDao.buscarEntidad(valor.toString());
             txtDni.setText(d.getDni());
             txtNombre.setText(d.getNombre());
-            cbxModalidad.setSelectedItem(d.getNombreModalidad());
-            cbxEstado.setSelectedItem(d.getEstado());
+            System.out.println("DAT:"+d.getNombreModalidad());
+            System.out.println("DAT:"+d.getNombrePeriodo());
+            cbxModalidad.setSelectedItem(d.getNombreModalidad());            
             cbxPeriodo.setSelectedItem(d.getNombrePeriodo());
+            
+            cbxEstado.setSelectedItem(d.getEstado());
             txtAPaterno.setText(d.getApellidoPat());
             txtAMaterno.setText(d.getApellidoMat());
             txtIdCarrera.setText(String.valueOf(d.getIdCarrera()));
@@ -290,8 +293,7 @@ public class MainPostulante extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(toastMsg, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
@@ -316,8 +318,9 @@ public class MainPostulante extends javax.swing.JPanel {
                                             .addComponent(cbxEstado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                             .addComponent(cbxModalidad, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtIdCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 22, Short.MAX_VALUE)))
+                                        .addComponent(txtIdCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(toastMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -399,7 +402,7 @@ public class MainPostulante extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -441,8 +444,7 @@ public class MainPostulante extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -451,39 +453,90 @@ public class MainPostulante extends javax.swing.JPanel {
         paintForm();
     }//GEN-LAST:event_jTable1MouseClicked
 
+    private void txtFiltroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyTyped
+        // TODO add your handling code here:
+        txtFiltro.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String cadena = (txtFiltro.getText());
+                System.out.println("v:" + cadena);
+                txtFiltro.setText(cadena);
+                repaint();
+                trsfiltro.setRowFilter(RowFilter.regexFilter(txtFiltro.getText())
+                );
+            }
+        });
+        System.out.println("llego");
+        trsfiltro = new TableRowSorter<>(jTable1.getModel());
+        jTable1.setRowSorter(trsfiltro);
+
+    }//GEN-LAST:event_txtFiltroKeyTyped
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        cDao = new PostulanteDao();
+        if (jTable1.getSelectedRowCount() > 0) {
+            try {
+                modelo = (DefaultTableModel) jTable1.getModel();
+                int rowx = jTable1.getSelectedRow();
+                Object valor = jTable1.getValueAt(rowx, 1);
+                msg = new MsgBox();
+                if (msg.showConfirmCustom("Esta seguro de eliminar este registro DNI: " + valor + "?", "Mensaje de Confirmación", "") == 0) {
+                    modelo.removeRow(rowx);
+                    cDao.delete(valor.toString());
+                    resetForm();
+                    toastMsg.success("Se elimino correctamente!");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un item");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
         List<ValidatorItem> vals = new ArrayList<>();
         vals.add(new ValidatorItem("required|number|min:8|max:8", txtDni,
-                "DNI"));
-        vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
-        vals.add(new ValidatorItem("required", txtAPaterno, "A. Paterno"));
-        vals.add(new ValidatorItem("required", txtAMaterno, "A. Materno"));
-        //vals.add(new ValidatorItem("required", cbxModalidad, "Modalidad"));
-        //vals.add(new ValidatorItem("required", cbxEstado, "Estado"));
-        //vals.add(new ValidatorItem("required", cbxPeriodo, "Periodo"));
-        vals.add(new ValidatorItem("required", txtCarrera, "Nombre Carrera"));
-        vals.add(new ValidatorItem("required", txtIdCarrera, "Id Carrera"));
-        //vals.add(new ValidatorItem("required|date", txtDato1, "Fecha"));
-        //vals.add(new ValidatorItem("required|email", txtDato2, "Correo"));
-        //vals.add(new ValidatorItem("required|date", jDateChooser1,"Fecha"));
-        //vals.add(new ValidatorItem("required", jHintTextField2, "TextoHint"));
-
-        cDao = new PostulanteDao();
-        PostulanteTO to = new PostulanteTO();
-        to.setDni(txtDni.getText());
-        to.setNombre(txtNombre.getText());
-        to.setApellidoPat(txtAPaterno.getText());
-        to.setApellidoMat(txtAMaterno.getText());
+            "DNI"));
+    vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
+    vals.add(new ValidatorItem("required", txtAPaterno, "A. Paterno"));
+    vals.add(new ValidatorItem("required", txtAMaterno, "A. Materno"));
+    //vals.add(new ValidatorItem("required", cbxModalidad, "Modalidad"));
+    //vals.add(new ValidatorItem("required", cbxEstado, "Estado"));
+    //vals.add(new ValidatorItem("required", cbxPeriodo, "Periodo"));
+    vals.add(new ValidatorItem("required", txtCarrera, "Nombre Carrera"));
+    vals.add(new ValidatorItem("required", txtIdCarrera, "Id Carrera"));
+    //vals.add(new ValidatorItem("required|date", txtDato1, "Fecha"));
+    //vals.add(new ValidatorItem("required|email", txtDato2, "Correo"));
+    //vals.add(new ValidatorItem("required|date", jDateChooser1,"Fecha"));
+    //vals.add(new ValidatorItem("required", jHintTextField2, "TextoHint"));
+    int fila = jTable1.getSelectedRow();
+    PostulanteTO to;
+    cDao = new PostulanteDao();
+    to = new PostulanteTO();
+    if(fila!=-1){
+    to=cDao.buscarEntidad(txtDni.getText());
+    }
+    try {
         to.setModalidad(cbxModalidad.getSelectedItem() == null ? "0"
-                : ((ComboBoxOption) cbxModalidad.getSelectedItem()).getKey());
-        to.setEstado(cbxEstado.getSelectedItem() == null ? ""
-                : cbxEstado.getSelectedItem().toString());
+            : ((ComboBoxOption) cbxModalidad.getSelectedItem()).getKey());
         to.setIdPeriodo(Integer.parseInt(cbxPeriodo.getSelectedItem() == null
                 ? "0" : ((ComboBoxOption) cbxPeriodo.getSelectedItem()).getKey()));
-        to.setIdCarrera(Integer.parseInt(txtIdCarrera.getText().equals("")
-                ? "0" : txtIdCarrera.getText()));
-        int fila = jTable1.getSelectedRow();
+        } catch (Exception e) {
+        }   
+    
+    to.setDni(txtDni.getText());
+    to.setNombre(txtNombre.getText());
+    to.setApellidoPat(txtAPaterno.getText());
+    to.setApellidoMat(txtAMaterno.getText());
+        System.out.println("ERRCB:"+cbxModalidad.getSelectedItem());       
+    to.setEstado(cbxEstado.getSelectedItem() == null ? ""
+            : cbxEstado.getSelectedItem().toString());     
+    to.setIdCarrera(Integer.parseInt(txtIdCarrera.getText().equals("")
+        ? "0" : txtIdCarrera.getText()));
+        
         if (fila != -1) {
             try {
                 int resultado = cDao.update(to);
@@ -514,31 +567,7 @@ public class MainPostulante extends javax.swing.JPanel {
                 log.log(Level.SEVERE, "Crear Cliente", e);
             }
         }
-
     }//GEN-LAST:event_btnRegistrarActionPerformed
-
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
-        cDao = new PostulanteDao();
-        if (jTable1.getSelectedRowCount() > 0) {
-            try {
-                modelo = (DefaultTableModel) jTable1.getModel();
-                int rowx = jTable1.getSelectedRow();
-                Object valor = jTable1.getValueAt(rowx, 1);
-                msg = new MsgBox();
-                if (msg.showConfirmCustom("Esta seguro de eliminar este registro DNI: " + valor + "?", "Mensaje de Confirmación", "") == 0) {
-                    modelo.removeRow(rowx);
-                    cDao.delete(valor.toString());
-                    resetForm();
-                    toastMsg.success("Se elimino correctamente!");
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, e.getMessage());
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Seleccione un item");
-        }
-    }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
@@ -547,25 +576,6 @@ public class MainPostulante extends javax.swing.JPanel {
         txtDni.setEditable(true);
         jTable1.getSelectionModel().clearSelection();
     }//GEN-LAST:event_btnNuevoActionPerformed
-
-    private void txtFiltroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyTyped
-        // TODO add your handling code here:
-        txtFiltro.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                String cadena = (txtFiltro.getText());
-                System.out.println("v:" + cadena);
-                txtFiltro.setText(cadena);
-                repaint();
-                trsfiltro.setRowFilter(RowFilter.regexFilter(txtFiltro.getText())
-                );
-            }
-        });
-        System.out.println("llego");
-        trsfiltro = new TableRowSorter<>(jTable1.getModel());
-        jTable1.setRowSorter(trsfiltro);
-
-    }//GEN-LAST:event_txtFiltroKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
