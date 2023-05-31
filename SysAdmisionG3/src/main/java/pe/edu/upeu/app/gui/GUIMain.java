@@ -136,26 +136,40 @@ public class GUIMain extends JFrame {
         public void actionPerformed(ActionEvent e) {
             System.out.println("pasa por aqui");
             Container contai = GUIMain.this.getContentPane();
-            
-            if(((JMenuItem) e.getSource()).getName().equals("mimiver1")){
+            if (((JMenuItem) e.getSource()).getName().equals("mimiareas")) {
+                System.out.println("HOLA");
                 jtpane.removeAll();
-                MainPostulante mp=new MainPostulante();
+                MainAreas map=new MainAreas();
+                map.setPreferredSize(new Dimension(1000, 600));
+                scrollPane=new JScrollPane(map);
+                scrollPane.setHorizontalScrollBarPolicy(
+                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                scrollPane.setVerticalScrollBarPolicy(
+                        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                jtpane.add("Areas", scrollPane);
+                contai.add(BorderLayout.CENTER, jtpane);
+                
+            }
+            if (((JMenuItem) e.getSource()).getName().equals("mimiver1")) {
+                System.out.println("si llega");
+                jtpane.removeAll();
+                MainPostulante mp = new MainPostulante();
                 mp.setPreferredSize(new Dimension(1000, 800));
-                scrollPane=new JScrollPane(mp);
+                scrollPane = new JScrollPane(mp);
                 scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-                jtpane.add("Postulante",scrollPane);     
-                
+                jtpane.add("Postulante", scrollPane);
+
                 jtpane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
                 contai.add(BorderLayout.CENTER, jtpane);
                 contai.invalidate();
                 contai.validate();
-                contai.repaint();                
+                contai.repaint();
             }
 
             if (((JMenuItem) e.getSource()).getName().equals("mimiselectall")) {
                 jtpane.removeAll();//remueve todo el contenido
-                
+
                 /*MainPostulante jp = new MainPostulante();
                 //jp.setPreferredSize(new Dimension(2000, 1000));
                 scrollPane = new JScrollPane(jp);
@@ -164,16 +178,14 @@ public class GUIMain extends JFrame {
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
                 );
                 jtpane.add("main", scrollPane);
-                */
-                
-                MainPostulante mp=new MainPostulante();
+                 */
+                MainPostulante mp = new MainPostulante();
                 mp.setPreferredSize(new Dimension(1000, 800));
-                scrollPane=new JScrollPane(mp);
+                scrollPane = new JScrollPane(mp);
                 scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-                jtpane.add("Postulante",scrollPane);
-                
-                
+                jtpane.add("Postulante", scrollPane);
+
                 JPanel pp1 = new JPanel();
                 pp1.setPreferredSize(new Dimension(2000, 1000));
                 JPanel pp2 = new JPanel();
