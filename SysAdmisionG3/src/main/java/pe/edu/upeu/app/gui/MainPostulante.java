@@ -452,38 +452,47 @@ public class MainPostulante extends javax.swing.JPanel {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
+            // TODO add your handling code here:
         List<ValidatorItem> vals = new ArrayList<>();
         vals.add(new ValidatorItem("required|number|min:8|max:8", txtDni,
-                "DNI"));
-        vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
-        vals.add(new ValidatorItem("required", txtAPaterno, "A. Paterno"));
-        vals.add(new ValidatorItem("required", txtAMaterno, "A. Materno"));
-        //vals.add(new ValidatorItem("required", cbxModalidad, "Modalidad"));
-        //vals.add(new ValidatorItem("required", cbxEstado, "Estado"));
-        //vals.add(new ValidatorItem("required", cbxPeriodo, "Periodo"));
-        vals.add(new ValidatorItem("required", txtCarrera, "Nombre Carrera"));
-        vals.add(new ValidatorItem("required", txtIdCarrera, "Id Carrera"));
-        //vals.add(new ValidatorItem("required|date", txtDato1, "Fecha"));
-        //vals.add(new ValidatorItem("required|email", txtDato2, "Correo"));
-        //vals.add(new ValidatorItem("required|date", jDateChooser1,"Fecha"));
-        //vals.add(new ValidatorItem("required", jHintTextField2, "TextoHint"));
-
-        cDao = new PostulanteDao();
-        PostulanteTO to = new PostulanteTO();
-        to.setDni(txtDni.getText());
-        to.setNombre(txtNombre.getText());
-        to.setApellidoPat(txtAPaterno.getText());
-        to.setApellidoMat(txtAMaterno.getText());
+            "DNI"));
+    vals.add(new ValidatorItem("required", txtNombre, "Nombre"));
+    vals.add(new ValidatorItem("required", txtAPaterno, "A. Paterno"));
+    vals.add(new ValidatorItem("required", txtAMaterno, "A. Materno"));
+    //vals.add(new ValidatorItem("required", cbxModalidad, "Modalidad"));
+    //vals.add(new ValidatorItem("required", cbxEstado, "Estado"));
+    //vals.add(new ValidatorItem("required", cbxPeriodo, "Periodo"));
+    vals.add(new ValidatorItem("required", txtCarrera, "Nombre Carrera"));
+    vals.add(new ValidatorItem("required", txtIdCarrera, "Id Carrera"));
+    //vals.add(new ValidatorItem("required|date", txtDato1, "Fecha"));
+    //vals.add(new ValidatorItem("required|email", txtDato2, "Correo"));
+    //vals.add(new ValidatorItem("required|date", jDateChooser1,"Fecha"));
+    //vals.add(new ValidatorItem("required", jHintTextField2, "TextoHint"));
+    int fila = jTable1.getSelectedRow();
+    PostulanteTO to;
+    cDao = new PostulanteDao();
+    to = new PostulanteTO();
+    if(fila!=-1){
+    to=cDao.buscarEntidad(txtDni.getText());
+    }
+    try {
         to.setModalidad(cbxModalidad.getSelectedItem() == null ? "0"
-                : ((ComboBoxOption) cbxModalidad.getSelectedItem()).getKey());
-        to.setEstado(cbxEstado.getSelectedItem() == null ? ""
-                : cbxEstado.getSelectedItem().toString());
+            : ((ComboBoxOption) cbxModalidad.getSelectedItem()).getKey());
         to.setIdPeriodo(Integer.parseInt(cbxPeriodo.getSelectedItem() == null
                 ? "0" : ((ComboBoxOption) cbxPeriodo.getSelectedItem()).getKey()));
-        to.setIdCarrera(Integer.parseInt(txtIdCarrera.getText().equals("")
-                ? "0" : txtIdCarrera.getText()));
-        int fila = jTable1.getSelectedRow();
+        } catch (Exception e) {
+        }   
+    
+    to.setDni(txtDni.getText());
+    to.setNombre(txtNombre.getText());
+    to.setApellidoPat(txtAPaterno.getText());
+    to.setApellidoMat(txtAMaterno.getText());
+        System.out.println("ERRCB:"+cbxModalidad.getSelectedItem());       
+    to.setEstado(cbxEstado.getSelectedItem() == null ? ""
+            : cbxEstado.getSelectedItem().toString());     
+    to.setIdCarrera(Integer.parseInt(txtIdCarrera.getText().equals("")
+        ? "0" : txtIdCarrera.getText()));
+        
         if (fila != -1) {
             try {
                 int resultado = cDao.update(to);
