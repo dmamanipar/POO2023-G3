@@ -4,7 +4,10 @@
  */
 package pe.edu.upeu.app.gui;
 
+import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -65,6 +68,31 @@ public void listarDatos() {
             modelo.addRow(ob);
         }
         jTable1.setModel(modelo);
+        
+        JButton ss=be.getCellEditorValue().buttons.get(0);
+        ss.addActionListener((ActionEvent e) -> {
+            System.out.println("VERRRRRR:");            
+            int row = jTable1.convertRowIndexToModel(jTable1.getEditingRow());
+            Object o = jTable1.getModel().getValueAt(row, 1);
+            cDao=new AreaPeriodoDao();
+            try {
+                cDao.delete(Integer.parseInt(o.toString()));
+                listarDatos();
+            } catch (Exception ex) {
+                System.err.println("Error:"+ex.getMessage());
+            }
+            System.out.println("AAAA:"+String.valueOf(o)); 
+            JOptionPane.showMessageDialog(this, "Editing: " + o);
+        }); 
+        
+        JButton bP=be.getCellEditorValue().buttons.get(1);
+        bP.addActionListener((ActionEvent e) -> {
+            int row = jTable1.convertRowIndexToModel(jTable1.getEditingRow());
+            Object o = jTable1.getModel().getValueAt(row, 1);
+            System.out.println("Llega a este boton: "+o.toString());
+        });
+        
+        
     }    
     /**
      * This method is called from within the constructor to initialize the form.
