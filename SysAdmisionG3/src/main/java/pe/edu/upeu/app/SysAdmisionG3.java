@@ -4,7 +4,7 @@
 package pe.edu.upeu.app;
 
 import java.util.prefs.Preferences;
-import pe.edu.upeu.app.gui.GUIMain;
+import pe.edu.upeu.app.gui.Login;
 import pe.edu.upeu.app.util.UtilsX;
 
 public class SysAdmisionG3 {
@@ -16,7 +16,7 @@ public class SysAdmisionG3 {
         userPrefs.put("PERFIL", "Admin");
 
         System.out.println("Hello World!");
-        new GUIMain().setVisible(true);
+        new Login().setVisible(true);
 
     }
 }
