@@ -6,9 +6,13 @@ package pe.edu.upeu.app.gui;
 
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import pe.com.syscenterlife.autocomp.ModeloDataAutocomplet;
+import pe.com.syscenterlife.jtablecomp.ButtonsEditor;
+import pe.com.syscenterlife.jtablecomp.ButtonsPanel;
+import pe.com.syscenterlife.jtablecomp.ButtonsRenderer;
 import pe.edu.upeu.app.dao.AreaPeriodoDao;
 import pe.edu.upeu.app.dao.AreaPeriodoDaoI;
 import pe.edu.upeu.app.modelo.AreaPeriodoTO;
@@ -39,14 +43,24 @@ public void listarDatos() {
         List<AreaPeriodoTO> listarCleintes = cDao.listarTodo();
         jTable1.setAutoCreateRowSorter(true);
         modelo = (DefaultTableModel) jTable1.getModel();
+        
+        ButtonsPanel.metaDataButtons=new String[][]{{"","img/del-icon.png"}, 
+                                                    {"","img/data-add-icon.png"}};
+        jTable1.setRowHeight(40);
+        TableColumn column=jTable1.getColumnModel().getColumn(4);
+        column.setCellRenderer(new ButtonsRenderer());
+        ButtonsEditor be=new ButtonsEditor(jTable1);
+        column.setCellEditor(be);
+        
         modelo.setNumRows(0);
-        Object[] ob = new Object[4];
+        Object[] ob = new Object[5];
         int cont = -1;
         for (int i = 0; i < listarCleintes.size(); i++) {
             ob[++cont] = i + 1;
             ob[++cont] = listarCleintes.get(i).getIdAreaPeriodo();
             ob[++cont] = listarCleintes.get(i).getNombreArea();
             ob[++cont] = listarCleintes.get(i).getNombre();
+            ob[++cont]="";
             cont = -1;
             modelo.addRow(ob);
         }
@@ -154,13 +168,13 @@ public void listarDatos() {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "#", "IdPA", "Area", "Periodo"
+                "#", "IdPA", "Area", "Periodo", "Opc"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
