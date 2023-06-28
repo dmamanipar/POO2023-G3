@@ -7,12 +7,9 @@ package pe.edu.upeu.app.dao;
 import java.util.List;
 import pe.edu.upeu.app.modelo.AreaPeriodoTO;
 
-
-
-
 /**
  *
- * @author ACER
+ * @author EP-Ing_Sist.-CALIDAD
  */
 public interface AreaPeriodoDaoI {
     public int create(AreaPeriodoTO d);

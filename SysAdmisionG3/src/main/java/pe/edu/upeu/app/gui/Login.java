@@ -56,6 +56,8 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setText("Usuario:");
         panelBorder1.add(jLabel2);
         jLabel2.setBounds(10, 60, 50, 16);
+
+        txtUser.setText("admin");
         panelBorder1.add(txtUser);
         txtUser.setBounds(70, 60, 120, 22);
 
@@ -63,7 +65,7 @@ public class Login extends javax.swing.JFrame {
         panelBorder1.add(jLabel3);
         jLabel3.setBounds(10, 110, 50, 16);
 
-        txtClave.setText("jPasswordField1");
+        txtClave.setText("admin");
         panelBorder1.add(txtClave);
         txtClave.setBounds(70, 110, 120, 22);
 
