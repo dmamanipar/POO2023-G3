@@ -5,13 +5,24 @@
 package pe.edu.upeu.app.gui;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import pe.com.syscenterlife.autocomp.ModeloDataAutocomplet;
 import pe.com.syscenterlife.jtablecomp.ButtonsEditor;
 import pe.com.syscenterlife.jtablecomp.ButtonsPanel;
@@ -21,6 +32,7 @@ import pe.edu.upeu.app.dao.AreaPeriodoDaoI;
 import pe.edu.upeu.app.modelo.AreaPeriodoTO;
 import pe.edu.upeu.app.util.ErrorLogger;
 import pe.edu.upeu.app.util.MsgBox;
+import pe.edu.upeu.app.util.UtilsX;
 
 /**
  *
@@ -34,27 +46,47 @@ public class MainAreaPeriodo extends javax.swing.JPanel {
     TableRowSorter<TableModel> trsfiltro;
     List<ModeloDataAutocomplet> items;
     static ErrorLogger log = new ErrorLogger(MainAreaPeriodo.class.getName());
-
+    UtilsX util = new UtilsX();
 
     public MainAreaPeriodo() {
         initComponents();
         listarDatos();
     }
 
-public void listarDatos() {
+    public void addTableHeader() {
+        Object[] newIdentifiers = new Object[]{"#", "idPA", "Area", "Periodo", "Opc"};
+        modelo.setColumnIdentifiers(newIdentifiers);
+    }
+
+    public void importarenDB(Object[][] data) {
+        int j = -1;
+        cDao = new AreaPeriodoDao();
+        for (Object[] data1 : data) {
+            AreaPeriodoTO d = new AreaPeriodoTO();
+            d.setIdAreaPeriodo((int) Double.parseDouble(String.valueOf(data1[++j])));
+            d.setIdArea((int) Double.parseDouble(String.valueOf(data1[++j])));
+            d.setIdPeriodo((int) Double.parseDouble(String.valueOf(data1[++j])));
+            cDao.create(d);
+            j = -1;
+        }
+        listarDatos();
+    }
+
+    public void listarDatos() {
         cDao = new AreaPeriodoDao();
         List<AreaPeriodoTO> listarCleintes = cDao.listarTodo();
         jTable1.setAutoCreateRowSorter(true);
+
         modelo = (DefaultTableModel) jTable1.getModel();
-        
-        ButtonsPanel.metaDataButtons=new String[][]{{"","img/del-icon.png"}, 
-                                                    {"","img/data-add-icon.png"}};
+        addTableHeader();
+        ButtonsPanel.metaDataButtons = new String[][]{{"", "img/del-icon.png"},
+        {"", "img/data-add-icon.png"}};
         jTable1.setRowHeight(40);
-        TableColumn column=jTable1.getColumnModel().getColumn(4);
+        TableColumn column = jTable1.getColumnModel().getColumn(4);
         column.setCellRenderer(new ButtonsRenderer());
-        ButtonsEditor be=new ButtonsEditor(jTable1);
+        ButtonsEditor be = new ButtonsEditor(jTable1);
         column.setCellEditor(be);
-        
+
         modelo.setNumRows(0);
         Object[] ob = new Object[5];
         int cont = -1;
@@ -63,37 +95,37 @@ public void listarDatos() {
             ob[++cont] = listarCleintes.get(i).getIdAreaPeriodo();
             ob[++cont] = listarCleintes.get(i).getNombreArea();
             ob[++cont] = listarCleintes.get(i).getNombre();
-            ob[++cont]="";
+            ob[++cont] = "";
             cont = -1;
             modelo.addRow(ob);
         }
         jTable1.setModel(modelo);
-        
-        JButton ss=be.getCellEditorValue().buttons.get(0);
+
+        JButton ss = be.getCellEditorValue().buttons.get(0);
         ss.addActionListener((ActionEvent e) -> {
-            System.out.println("VERRRRRR:");            
+            System.out.println("VERRRRRR:");
             int row = jTable1.convertRowIndexToModel(jTable1.getEditingRow());
             Object o = jTable1.getModel().getValueAt(row, 1);
-            cDao=new AreaPeriodoDao();
+            cDao = new AreaPeriodoDao();
             try {
                 cDao.delete(Integer.parseInt(o.toString()));
                 listarDatos();
             } catch (Exception ex) {
-                System.err.println("Error:"+ex.getMessage());
+                System.err.println("Error:" + ex.getMessage());
             }
-            System.out.println("AAAA:"+String.valueOf(o)); 
+            System.out.println("AAAA:" + String.valueOf(o));
             JOptionPane.showMessageDialog(this, "Editing: " + o);
-        }); 
-        
-        JButton bP=be.getCellEditorValue().buttons.get(1);
+        });
+
+        JButton bP = be.getCellEditorValue().buttons.get(1);
         bP.addActionListener((ActionEvent e) -> {
             int row = jTable1.convertRowIndexToModel(jTable1.getEditingRow());
             Object o = jTable1.getModel().getValueAt(row, 1);
-            System.out.println("Llega a este boton: "+o.toString());
+            System.out.println("Llega a este boton: " + o.toString());
         });
-        
-        
-    }    
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -105,6 +137,13 @@ public void listarDatos() {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnImpExcel = new javax.swing.JButton();
+        btnExpExcel = new javax.swing.JButton();
+        btnExcelFromDB = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        btnImpDataHead = new javax.swing.JButton();
+        btnInsertar = new javax.swing.JButton();
+        btnExpDataHead = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         comboBoxSuggestion1 = new pe.com.syscenterlife.comboauto.ComboBoxSuggestion();
@@ -121,21 +160,71 @@ public void listarDatos() {
 
         jLabel1.setText("Gestion Area Periodo");
 
+        btnImpExcel.setText("Importar Excel DB");
+        btnImpExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImpExcelActionPerformed(evt);
+            }
+        });
+
+        btnExpExcel.setText("Exportar Excel");
+
+        btnExcelFromDB.setText("ExcelExpFromDB");
+
+        jCheckBox1.setText("Cabecera");
+
+        btnImpDataHead.setText("ImpDataHead");
+
+        btnInsertar.setText("Insertar");
+
+        btnExpDataHead.setText("ExpDataHead");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jCheckBox1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnImpDataHead)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnInsertar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExpDataHead))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnImpExcel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExpExcel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExcelFromDB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(136, 136, 136))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(jLabel1)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBox1)
+                            .addComponent(btnImpDataHead)
+                            .addComponent(btnInsertar)
+                            .addComponent(btnExpDataHead))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnImpExcel)
+                    .addComponent(btnExpExcel)
+                    .addComponent(btnExcelFromDB))
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 204));
@@ -255,13 +344,80 @@ public void listarDatos() {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnImpExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImpExcelActionPerformed
+        // TODO add your handling code here:
+
+        File excelFile;
+        FileInputStream excelFIS = null;
+        BufferedInputStream excelBIS = null;
+        XSSFWorkbook excelImportToJTable = null;
+        String defaultCurrentDirectoryPath = util.getFolderExterno("data").toString();
+
+        String[] exs = new String[]{"xls", "xlsx", "xlsm"};
+
+        FileFilter fnef = new FileNameExtensionFilter("Exel Files", exs);
+        JFileChooser excelFileChooser = new JFileChooser(defaultCurrentDirectoryPath);
+        excelFileChooser.setFileFilter(fnef);
+        excelFileChooser.setDialogTitle("Select Excel File");
+
+        Object[][] data;
+        int excelChooser = excelFileChooser.showOpenDialog(null);
+
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            try {
+                excelFile = excelFileChooser.getSelectedFile();
+                excelFIS = new FileInputStream(excelFile);
+                excelBIS = new BufferedInputStream(excelFIS);
+                excelImportToJTable = new XSSFWorkbook(excelBIS);
+                XSSFSheet excelSheet = excelImportToJTable.getSheetAt(0);
+                System.out.println("Cantidad:" + excelSheet.getLastRowNum());
+                int noOfColumns = excelSheet.getRow(0).getPhysicalNumberOfCells();
+                data = new Object[excelSheet.getLastRowNum()+1][noOfColumns];
+                for (int row = 0; row < excelSheet.getLastRowNum() + 1; row++) {
+                    XSSFRow excelRow = excelSheet.getRow(row);
+                    for (int col = 0; col < noOfColumns; col++) {
+                        XSSFCell excelName = excelRow.getCell(col);
+                        data[row][col] = excelRow.getCell(col);
+                    }
+                }
+                importarenDB(data);
+                listarDatos();
+                JOptionPane.showMessageDialog(null, "Imported Successfully !!.....");
+            } catch (IOException iOException) {
+                JOptionPane.showMessageDialog(null, iOException.getMessage());
+            } finally {
+                try {
+                    if (excelFIS != null) {
+                        excelFIS.close();
+                    }
+                    if (excelBIS != null) {
+                        excelBIS.close();
+                    }
+                    if (excelImportToJTable != null) {
+                        excelImportToJTable.close();
+                    }
+                } catch (IOException iOException) {
+                    JOptionPane.showMessageDialog(null, iOException.getMessage());
+                }
+            }
+        }
+
+    }//GEN-LAST:event_btnImpExcelActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExcelFromDB;
+    private javax.swing.JButton btnExpDataHead;
+    private javax.swing.JButton btnExpExcel;
+    private javax.swing.JButton btnImpDataHead;
+    private javax.swing.JButton btnImpExcel;
+    private javax.swing.JButton btnInsertar;
     private pe.com.syscenterlife.comboauto.ComboBoxSuggestion comboBoxSuggestion1;
     private pe.com.syscenterlife.comboauto.ComboBoxSuggestion comboBoxSuggestion2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

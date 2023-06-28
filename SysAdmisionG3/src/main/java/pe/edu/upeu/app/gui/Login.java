@@ -23,7 +23,8 @@ public class Login extends javax.swing.JFrame {
         this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(new Dimension(screenSize.width/2, (screenSize.height-36)/2));  
-        this.setLocationRelativeTo(null);        
+        this.setLocationRelativeTo(null);  
+        jButton2.setEnabled(false);
     }
 
     /**
