@@ -6,8 +6,11 @@ package pe.edu.upeu.app.gui;
 
 import java.awt.event.ActionEvent;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.JButton;
@@ -168,16 +171,42 @@ public class MainAreaPeriodo extends javax.swing.JPanel {
         });
 
         btnExpExcel.setText("Exportar Excel");
+        btnExpExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExpExcelActionPerformed(evt);
+            }
+        });
 
         btnExcelFromDB.setText("ExcelExpFromDB");
+        btnExcelFromDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcelFromDBActionPerformed(evt);
+            }
+        });
 
+        jCheckBox1.setSelected(true);
         jCheckBox1.setText("Cabecera");
 
         btnImpDataHead.setText("ImpDataHead");
+        btnImpDataHead.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImpDataHeadActionPerformed(evt);
+            }
+        });
 
         btnInsertar.setText("Insertar");
+        btnInsertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInsertarActionPerformed(evt);
+            }
+        });
 
         btnExpDataHead.setText("ExpDataHead");
+        btnExpDataHead.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExpDataHeadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -372,7 +401,7 @@ public class MainAreaPeriodo extends javax.swing.JPanel {
                 XSSFSheet excelSheet = excelImportToJTable.getSheetAt(0);
                 System.out.println("Cantidad:" + excelSheet.getLastRowNum());
                 int noOfColumns = excelSheet.getRow(0).getPhysicalNumberOfCells();
-                data = new Object[excelSheet.getLastRowNum()+1][noOfColumns];
+                data = new Object[excelSheet.getLastRowNum() + 1][noOfColumns];
                 for (int row = 0; row < excelSheet.getLastRowNum() + 1; row++) {
                     XSSFRow excelRow = excelSheet.getRow(row);
                     for (int col = 0; col < noOfColumns; col++) {
@@ -403,6 +432,255 @@ public class MainAreaPeriodo extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_btnImpExcelActionPerformed
+
+    private void btnExpExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpExcelActionPerformed
+        // TODO add your handling code here:
+        FileOutputStream excelFOU = null;
+        BufferedOutputStream excelBOU = null;
+        XSSFWorkbook excelJTableExporter = null;
+        JFileChooser excelFileChooser = new JFileChooser(util.getFolderExterno("data").toString());
+
+        excelFileChooser.setDialogTitle("Save As");
+
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls",
+                "xlsx", "xlsm");
+
+        excelFileChooser.setFileFilter(fnef);
+        int excelChooser = excelFileChooser.showSaveDialog(null);
+
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            try {
+                excelJTableExporter = new XSSFWorkbook();
+                XSSFSheet excelSheet = excelJTableExporter.createSheet("JTable Sheet");
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    XSSFRow excelRow = excelSheet.createRow(i);
+                    for (int j = 0; j < modelo.getColumnCount(); j++) {
+                        XSSFCell excelCell = excelRow.createCell(j);
+                        excelCell.setCellValue(modelo.getValueAt(i, j).toString());
+                    }
+                }
+                excelFOU = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
+                excelBOU = new BufferedOutputStream(excelFOU);
+                excelJTableExporter.write(excelBOU);
+                JOptionPane.showMessageDialog(null, "Exported Successfully !!!........");
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    if (excelBOU != null) {
+                        excelBOU.close();
+                    }
+                    if (excelFOU != null) {
+                        excelFOU.close();
+                    }
+                    if (excelJTableExporter != null) {
+                        excelJTableExporter.close();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+    }//GEN-LAST:event_btnExpExcelActionPerformed
+
+    private void btnExcelFromDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelFromDBActionPerformed
+        // TODO add your handling code here:
+        cDao = new AreaPeriodoDao();
+        List<AreaPeriodoTO> listarCleintes = cDao.listarTodo();
+        FileOutputStream excelFOU = null;
+        BufferedOutputStream excelBOU = null;
+        XSSFWorkbook excelJTableExporter = null;
+        JFileChooser excelFileChooser = new JFileChooser(util.getFolderExterno("data").toString());
+        excelFileChooser.setDialogTitle("Save As");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls",
+                "xlsx", "xlsm");
+        excelFileChooser.setFileFilter(fnef);
+        int excelChooser = excelFileChooser.showSaveDialog(null);
+
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            try {
+                excelJTableExporter = new XSSFWorkbook();
+                XSSFSheet excelSheet = excelJTableExporter.createSheet("JTable Sheet");
+                int j = -1;
+                for (int i = 0; i < listarCleintes.size(); i++) {
+                    XSSFRow excelRow = excelSheet.createRow(i);
+                    XSSFCell excelCell = excelRow.createCell(++j);
+                    excelCell.setCellValue(listarCleintes.get(i).getIdAreaPeriodo());
+                    excelCell = excelRow.createCell(++j);
+                    excelCell.setCellValue(listarCleintes.get(i).getIdArea());
+                    excelCell = excelRow.createCell(++j);
+                    excelCell.setCellValue(listarCleintes.get(i).getIdPeriodo());
+                    j = -1;
+                }
+                excelFOU = new FileOutputStream(excelFileChooser.getSelectedFile()
+                        + ".xlsx");
+
+                excelBOU = new BufferedOutputStream(excelFOU);
+                excelJTableExporter.write(excelBOU);
+                JOptionPane.showMessageDialog(null, "Exported Successfully !!!........");
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    if (excelBOU != null) {
+                        excelBOU.close();
+                    }
+                    if (excelFOU != null) {
+                        excelFOU.close();
+                    }
+                    if (excelJTableExporter != null) {
+                        excelJTableExporter.close();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+    }//GEN-LAST:event_btnExcelFromDBActionPerformed
+
+    private void btnImpDataHeadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImpDataHeadActionPerformed
+        // TODO add your handling code here:
+        File excelFile;
+        FileInputStream excelFIS = null;
+        BufferedInputStream excelBIS = null;
+        XSSFWorkbook excelImportToJTable = null;
+        String defaultCurrentDirectoryPath
+                = util.getFolderExterno("data").toString();
+        String[] exs = new String[]{"xls", "xlsx",
+            "xlsm"};
+        FileFilter fnef = new FileNameExtensionFilter("Exel Files", exs);
+        JFileChooser excelFileChooser = new JFileChooser(defaultCurrentDirectoryPath);
+        excelFileChooser.setFileFilter(fnef);
+        excelFileChooser.setDialogTitle("Select Excel File");
+        int excelChooser = excelFileChooser.showOpenDialog(null);
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            try {
+                excelFile = excelFileChooser.getSelectedFile();
+                excelFIS = new FileInputStream(excelFile);
+                excelBIS = new BufferedInputStream(excelFIS);
+                excelImportToJTable = new XSSFWorkbook(excelBIS);
+                XSSFSheet excelSheet = excelImportToJTable.getSheetAt(0);
+                System.out.println("Cantidad:" + excelSheet.getLastRowNum());
+                int noOfColumns = excelSheet.getRow(0).getPhysicalNumberOfCells();
+                Object[] newIdentifiers = new Object[noOfColumns];
+                Object[] datax = new Object[noOfColumns];
+                modelo.setNumRows(0);
+                for (int row = 0; row < excelSheet.getLastRowNum() + 1; row++) {
+                    XSSFRow excelRow = excelSheet.getRow(row);
+                    if (row == 0 && jCheckBox1.isSelected()) {
+                        modelo = (DefaultTableModel) jTable1.getModel();
+                        for (int col = 0; col < noOfColumns; col++) {
+                            newIdentifiers[col] = excelRow.getCell(col);
+                        }
+                        modelo.setColumnIdentifiers(newIdentifiers);
+                    } else {
+                        for (int col = 0; col < noOfColumns; col++) {
+                            datax[col] = excelRow.getCell(col);
+                        }
+                        modelo.addRow(datax);
+                    }
+                }
+                JOptionPane.showMessageDialog(null, "Imported Successfully !!.....");
+            } catch (IOException iOException) {
+                JOptionPane.showMessageDialog(null, iOException.getMessage());
+            } finally {
+                try {
+                    if (excelFIS != null) {
+                        excelFIS.close();
+                    }
+                    if (excelBIS != null) {
+                        excelBIS.close();
+                    }
+                    if (excelImportToJTable != null) {
+                        excelImportToJTable.close();
+                    }
+                } catch (IOException iOException) {
+                    JOptionPane.showMessageDialog(null, iOException.getMessage());
+                }
+            }
+        }
+
+    }//GEN-LAST:event_btnImpDataHeadActionPerformed
+
+    private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
+        // TODO add your handling code here:
+        AreaPeriodoTO d;
+        int j = -1;
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            d = new AreaPeriodoTO();
+            d.setIdAreaPeriodo((int) Double.parseDouble(String.valueOf(modelo.getValueAt(i, ++j))));
+            d.setIdArea((int) Double.parseDouble(String.valueOf(modelo.getValueAt(i, ++j))));
+            d.setIdPeriodo((int) Double.parseDouble(String.valueOf(modelo.getValueAt(i, ++j))));
+            cDao.create(d);
+            j = -1;
+        }
+        listarDatos();
+    }//GEN-LAST:event_btnInsertarActionPerformed
+
+    private void btnExpDataHeadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpDataHeadActionPerformed
+        // TODO add your handling code here:
+        FileOutputStream excelFOU = null;
+        BufferedOutputStream excelBOU = null;
+        XSSFWorkbook excelJTableExporter = null;
+//Choose Location For Saving Excel File
+        JFileChooser excelFileChooser = new JFileChooser(util.getFolderExterno("data").toString());
+        excelFileChooser.setDialogTitle("Save As");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx",
+                "xlsm");
+        excelFileChooser.setFileFilter(fnef);
+        int excelChooser = excelFileChooser.showSaveDialog(null);
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            try {
+                excelJTableExporter = new XSSFWorkbook();
+                XSSFSheet excelSheet = excelJTableExporter.createSheet("JTable Sheet");
+                int flag = 0;
+                if (jCheckBox1.isSelected()) {
+                    int size = jTable1.getColumnCount();
+                    XSSFRow excelRowh = excelSheet.createRow(0);
+                    for (int i = 0; i < size; i++) {
+                        XSSFCell excelCell = excelRowh.createCell(i);
+                        excelCell.setCellValue(jTable1.getColumnName(i));
+                    }
+                    flag++;
+                }
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    XSSFRow excelRow = excelSheet.createRow(i + flag);
+                    for (int j = 0; j < modelo.getColumnCount(); j++) {
+                        XSSFCell excelCell = excelRow.createCell(j);
+                        excelCell.setCellValue(modelo.getValueAt(i, j).toString());
+                    }
+                }
+                excelFOU = new FileOutputStream(excelFileChooser.getSelectedFile() + ".xlsx");
+                excelBOU = new BufferedOutputStream(excelFOU);
+                excelJTableExporter.write(excelBOU);
+                JOptionPane.showMessageDialog(null, "Exported Successfully !!!........");
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    if (excelBOU != null) {
+                        excelBOU.close();
+                    }
+                    if (excelFOU != null) {
+                        excelFOU.close();
+                    }
+                    if (excelJTableExporter != null) {
+                        excelJTableExporter.close();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }//GEN-LAST:event_btnExpDataHeadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
